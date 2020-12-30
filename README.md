@@ -1,5 +1,4 @@
-# B3DVATD
-B3DVATD is a blender addon which exports Vertex Animation Texture stuffs for TouchDesigner.
+ This is a blender addon which exports Vertex Animation Texture stuffs for TouchDesigner.
 ![td](https://github.com/yumataesu/b3d_vat_4_td/blob/main/readme/output.gif)
 
 ## How to install
