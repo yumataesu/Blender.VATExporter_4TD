@@ -4,13 +4,13 @@
  <img src="https://github.com/yumataesu/Blender.Vatd/blob/main/readme/panel.png"/>
 </div>
 
-## Arrowed Modifiers
+## Allowed Modifiers
 * Deform Modifiers
 * Cloth Modifier in Physics
 
 
 ## How to install
-Follow this [instruction(YouTube link)](https://www.youtube.com/watch?v=14G_YIVdBd0).
+Follow this [installation(YouTube link)](https://www.youtube.com/watch?v=14G_YIVdBd0).
 
 
 ![](https://github.com/yumataesu/Blender.Vatd/blob/main/readme/output.gif)
