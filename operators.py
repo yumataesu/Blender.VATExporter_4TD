@@ -3,9 +3,13 @@ import bpy
 from bpy.props import *        
 import bmesh
 
-def create_mesh_sequence(context, data, object):
-    """Return a list of combined mesh data per frame"""
-    meshes = []
+def create_sequence(context, data, object):
+    """Return a list of offsets normal data per frame & mesh of first frame """
+
+    offsets = []
+    normals = []
+    first_frame_mesh = None
+    
     s = context.scene.start_frame
     e = context.scene.end_frame
     
@@ -23,25 +27,21 @@ def create_mesh_sequence(context, data, object):
         bm.to_mesh(me)
         bm.free()
         me.calc_normals()
-        meshes.append(me)
-        
-    return meshes
 
-def create_vertex_sequences(data, mesh_seq):
-    """Return lists of vertex offsets and normals from a list of mesh data"""
-    original = mesh_seq[0].vertices
-    offsets = []
-    normals = []
-    
-    for mesh in mesh_seq:
-        for v in mesh.vertices:
+        if i == s:
+            first_frame_mesh = me.copy()
+        
+        original = first_frame_mesh[0].vertices
+        for v in me.vertices:
             offset = v.co - original[v.index].co
             x, y, z = offset
             offsets.extend((x, y, z, 1.0))
             x, y, z = v.normal
             normals.extend(((x + 1.0) * 0.5, (y + 1.0) * 0.5, (z + 1.0) * 0.5, 1.0))
 
-    return offsets, normals
+
+    return offsets, normals, first_frame_mesh
+
 
 def bake(context, data, offsets, normals, size):
     """Stores vertex offsets and normals in seperate image textures"""
@@ -101,12 +101,10 @@ class OBJECT_OT_VertexAnimationTexture(bpy.types.Operator):
         texture_size = len(origin_obj.data.vertices), time_range
         
         # create offsets & normal textures---------------------------------
-        mesh_seq = create_mesh_sequence(context, bpy.data, origin_obj) 
-        offsets, normals = create_vertex_sequences(bpy.data, mesh_seq)
+        offsets, normals, origin = create_sequence(context, bpy.data, origin_obj) 
         offset_texture, normal_texture = bake(context, bpy.data, offsets, normals, texture_size)
 
         # create mesh object with custom attribute---------------------------------
-        origin = mesh_seq[0].copy()
         mobj = create_export_mesh_object(context, bpy.data, origin)
 
         # export assets---------------------------------
